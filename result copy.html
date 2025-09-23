@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Betlife - Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<header>
+        <a href="#home" class="logo">Betlife</a>
+    <nav>
+        <a href="home.html#home"><i class="fas fa-home"></i> Home</a>
+        <a href="home.html#services"><i class="fas fa-envelope"></i> Services</a>
+        <a href="home.html#about"><i class="fas fa-info-circle"></i> About Us</a>
+        <a href="home.html#contact"><i class="fas fa-cogs"></i> Contact</a>
+    </nav>
+</header>    
+
+<div class="container">
+    <div class="title">Schedule </div>
+    <div class="message" id="welcome-message"></div>
+    
+    <div class="form-section">
+        <div class="enter-sub">Enter Your meals and Times</div>
+        <form id="schedule-form">
+            <label for="subject">Meal:</label>
+            <input type="text" id="subject" name="subject" placeholder="Enter subject name" required>
+            <label for="time">Meal Time:</label>
+            <input type="text" id="time" name="time" placeholder="Enter class time (e.g., 9:00 AM)" required>
+            <button type="button" onclick="addSubject()">Add Subject</button>
+        </form>
+    </div>
+
+    <div class="table-section hidden" id="subjects-table-section">
+        <div class="title">Your Subjects and Class Times</div>
+        <table id="subjects-table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Class Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="subjects-tbody">
+            </tbody>
+        </table>
+    </div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name');
+    const hasAllergy = urlParams.get('allergy');
+
+    document.getElementById('welcome-message').textContent = `Hello, ${name}!`;
+    document.getElementById('schedule-table').classList.remove('hidden');
+
+
+    function addSubject() {
+        const subjectInput = document.getElementById('subject');
+        const timeInput = document.getElementById('time');
+
+        const subject = subjectInput.value.trim();
+        const time = timeInput.value.trim();
+
+        if (subject && time) {
+            const tbody = document.getElementById('subjects-tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${subject}</td>
+                <td>${time}</td>
+                <td><button class="remove-btn" onclick="removeSubject(this)">Remove</button></td>
+            `;
+            tbody.appendChild(row);
+
+            subjectInput.value = '';
+            timeInput.value = '';
+
+            document.getElementById('subjects-table-section').classList.remove('hidden');
+        }
+    }
+
+    function removeSubject(button) {
+        const row = button.closest('tr');
+        row.remove();
+
+        const tbody = document.getElementById('subjects-tbody');
+        if (tbody.children.length === 0) {
+            document.getElementById('subjects-table-section').classList.add('hidden');
+        }
+    }
+
+</script>
+
+</body>
+</html>

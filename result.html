@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Betlife - Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<header>
+    <a href="#home" class="logo">Betlife</a>
+    <nav>
+        <a href="home.html#home"><i class="fas fa-home"></i> Home</a>
+        <a href="home.html#services"><i class="fas fa-envelope"></i> Services</a>
+        <a href="home.html#about"><i class="fas fa-info-circle"></i> About Us</a>
+        <a href="home.html#contact"><i class="fas fa-cogs"></i> Contact</a>
+    </nav>
+</header>    
+
+<div class="container">
+    <div class="title">Schedule</div>
+    <div class="message" id="welcome-message"></div>
+    
+    <div class="form-section">
+        <div class="enter-sub">Enter Your Subjects and Times</div>
+        <form id="schedule-form">
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" placeholder="Enter subject name" required>
+            <label for="time">Class Time:</label>
+            <input type="text" id="time" name="time" placeholder="Enter class time (e.g., 9:00 AM)" required>
+            <button type="button" onclick="addSubject()">Add Subject</button>
+        </form>
+    </div>
+
+    <div class="table-section hidden" id="subjects-table-section">
+        <div class="title">Your Subjects and Class Times</div>
+        <table id="subjects-table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Class Time</th>
+                    <th>Actions</th>
+                    <th>Completed</th>
+                </tr>
+            </thead>
+            <tbody id="subjects-tbody">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-section hidden" id="completed-table-section">
+        <div class="title">Completed Tasks</div>
+        <table id="completed-table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Class Time</th>
+                </tr>
+            </thead>
+            <tbody id="completed-tbody">
+            </tbody>
+        </table>
+    </div>
+    
+    <div id="schedule-table" class="hidden">
+        <div class="title">Daily Schedule</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Meal Times</th>
+                    <th>Rest Times</th>
+                    <th>Sleep Times</th>
+                    <th>Hobby Times</th>
+                </tr>
+            </thead>
+            <tbody id="schedule-tbody">
+                <tr>
+                    <td><input type="text" id="breakfast-time" value="8:00 AM - Breakfast" disabled></td>
+                    <td><input type="text" id="rest1-time" value="10:00 AM - 10 mins" disabled></td>
+                    <td><input type="text" id="sleep-time" value="10:00 PM - Sleep" disabled></td>
+                    <td><input type="text" id="Hobby-time" value="12:00 PM - Art" disabled></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="lunch-time" value="1:00 PM - Lunch" disabled></td>
+                    <td><input type="text" id="rest2-time" value="3:00 PM - 15 mins" disabled></td>
+                    <td></td>
+                    <td><input type="text" id="Hobby2-time" value="4:00 PM - Reading" disabled></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="dinner-time" value="7:00 PM - Dinner" disabled></td>
+                    <td><input type="text" id="rest3-time" value="5:00 PM - 10 mins" disabled></td>
+                    <td></td>
+                    <td><input type="text" id="Hobby3-time" value="9:00 PM - Writing" disabled></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="edit-section">
+            <button type="button" id="edit-btn" onclick="toggleEditMode()">Edit</button>
+            <button type="button" id="save-btn" class="hidden" onclick="saveSchedule()">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name');
+    const hasAllergy = urlParams.get('allergy');
+
+    document.getElementById('welcome-message').textContent = `Hello, ${name}!`;
+    document.getElementById('schedule-table').classList.remove('hidden');
+
+    function addSubject() {
+        const subjectInput = document.getElementById('subject');
+        const timeInput = document.getElementById('time');
+
+        const subject = subjectInput.value.trim();
+        const time = timeInput.value.trim();
+
+        if (subject && time) {
+            const tbody = document.getElementById('subjects-tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${subject}</td>
+                <td>${time}</td>
+                <td>
+                    <button class="remove-btn" onclick="editSubject(this)">Edit</button>
+                    <button class="remove-btn" onclick="removeSubject(this)">Remove</button>
+                </td>
+                <td><input type="checkbox" onclick="completeSubject(this)"></td>
+            `;
+            tbody.appendChild(row);
+
+            subjectInput.value = '';
+            timeInput.value = '';
+
+            document.getElementById('subjects-table-section').classList.remove('hidden');
+        }
+    }
+
+    function removeSubject(button) {
+        const row = button.closest('tr');
+        row.remove();
+
+        const tbody = document.getElementById('subjects-tbody');
+        if (tbody.children.length === 0) {
+            document.getElementById('subjects-table-section').classList.add('hidden');
+        }
+    }
+
+    function editSubject(button) {
+        const row = button.closest('tr');
+        const subject = row.cells[0].innerText;
+        const time = row.cells[1].innerText;
+
+        document.getElementById('subject').value = subject;
+        document.getElementById('time').value = time;
+
+        removeSubject(button);
+    }
+
+    function completeSubject(checkbox) {
+        const row = checkbox.closest('tr');
+        const subject = row.cells[0].innerText;
+        const time = row.cells[1].innerText;
+
+        row.remove();
+
+        const completedTbody = document.getElementById('completed-tbody');
+        const completedRow = document.createElement('tr');
+        completedRow.innerHTML = `
+            <td>${subject}</td>
+            <td>${time}</td>
+        `;
+        completedTbody.appendChild(completedRow);
+
+        document.getElementById('completed-table-section').classList.remove('hidden');
+
+        const tbody = document.getElementById('subjects-tbody');
+        if (tbody.children.length === 0) {
+            document.getElementById('subjects-table-section').classList.add('hidden');
+        }
+    }
+
+    function toggleEditMode() {
+        const inputs = document.querySelectorAll('#schedule-tbody input');
+        const isDisabled = inputs[0].disabled;
+
+        inputs.forEach(input => {
+            input.disabled = !isDisabled;
+        });
+
+        document.getElementById('edit-btn').classList.toggle('hidden');
+        document.getElementById('save-btn').classList.toggle('hidden');
+    }
+
+    function saveSchedule() {
+        const breakfastTime = document.getElementById('breakfast-time').value;
+        const lunchTime = document.getElementById('lunch-time').value;
+        const dinnerTime = document.getElementById('dinner-time').value;
+        const rest1Time = document.getElementById('rest1-time').value;
+        const rest2Time = document.getElementById('rest2-time').value;
+        const rest3Time = document.getElementById('rest3-time').value;
+        const sleepTime = document.getElementById('sleep-time').value;
+
+        console.log('Breakfast Time:', breakfastTime);
+        console.log('Lunch Time:', lunchTime);
+        console.log('Dinner Time:', dinnerTime);
+        console.log('Rest 1 Time:', rest1Time);
+        console.log('Rest 2 Time:', rest2Time);
+        console.log('Rest 3 Time:', rest3Time);
+        console.log('Sleep Time:', sleepTime);
+
+        alert('Schedule has been updated!');
+
+        toggleEditMode(); // Disable inputs and toggle buttons
+    }
+</script>
+
+</body>
+</html>

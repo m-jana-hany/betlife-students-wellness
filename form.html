@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Betlife - Form</title>
+    <link href="style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <a href="home.html#home" class="logo">Betlife</a>
+        <nav>
+            <a href="home.html#home"><i class="fas fa-home"></i> Home</a>
+            <a href="home.html#services"><i class="fas fa-envelope"></i> Services</a>
+            <a href="home.html#about"><i class="fas fa-info-circle"></i> About Us</a>
+            <a href="home.html#contact"><i class="fas fa-cogs"></i> Contact</a>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <div class="title">Data For Time Management <i id="info-icon" class="fas fa-info-circle info-icon" onclick="toggleHelp()"></i>
+        </div>
+        <p id="help-text" class="description" >
+            This form is designed to help you create a personalized daily schedule. 
+            By providing your personal information, preferences, and class details, 
+            we can generate a timetable that includes optimal times for meals, sleep, 
+            rest, and study sessions. Please fill out all the fields accurately to ensure 
+            the schedule meets your needs.</p>
+        <form id="personal-info-form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+                <span id="nameError" class="error">Write your fullname</span>
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+                <span id="emailError" class="error">Please enter a valid email address.</span>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required>
+                <span id="phoneError" class="error">Phone must be exactly 11 digits.</span>
+            </div>
+            <div class="form-group">
+                <label for="morning-night">Are you a morning person or a night person?</label>
+                <select id="morning-night" name="morning-night" required>
+                    <option value="">Select an option</option>
+                    <option value="morning">Morning Person</option>
+                    <option value="night">Night Person</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="classes">Number of Classes</label>
+                <input type="number" id="classes" name="classes" min="1" required>
+            </div>
+            <div class="form-group">
+                <label for="flexibility">Are you flexible to change your classes?</label>
+                <select id="flexibility" name="flexibility" required>
+                    <option value="">Select an option</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <button type="submit" class="submit-button">Submit</button>
+        </form>
+    </div>
+    
+    <script>
+        function toggleHelp() {
+            const helpText = document.getElementById('help-text');
+            helpText.style.display = helpText.style.display === 'none' ? 'block' : 'none';
+        }
+    
+        document.getElementById('personal-info-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+    
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+    
+            let valid = true;
+    
+            if (name.length <= 7) {
+                document.getElementById('nameError').style.display = 'inline';
+                valid = false;
+            } else {
+                document.getElementById('nameError').style.display = 'none';
+            }
+    
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                document.getElementById('emailError').style.display = 'inline';
+                valid = false;
+            } else {
+                document.getElementById('emailError').style.display = 'none';
+            }
+    
+            const phonePattern = /^\d{11}$/;
+            if (!phonePattern.test(phone)) {
+                document.getElementById('phoneError').style.display = 'inline';
+                valid = false;
+            } else {
+                document.getElementById('phoneError').style.display = 'none';
+            }
+    
+            if (valid) {
+                const gender = document.getElementById('gender').value;
+                const morningNight = document.getElementById('morning-night').value;
+                const classes = document.getElementById('classes').value;
+                const flexibility = document.getElementById('flexibility').value;
+    
+                window.location.href = `result.html?name=${encodeURIComponent(name)}&gender=${encodeURIComponent(gender)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&morningNight=${encodeURIComponent(morningNight)}&classes=${encodeURIComponent(classes)}&flexibility=${encodeURIComponent(flexibility)}`;
+            }
+        });
+    </script>
+    
+    </body>
+</html>

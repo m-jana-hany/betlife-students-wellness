@@ -1,5 +1,5 @@
 # 🌿 Betlife — Early Web & Logic Prototype
-[https://m-jana-hany.github.io/Betlife-summer-camp-project/home.html]
+(https://m-jana-hany.github.io/betlife-students-wellness/)
 A lightweight interactive web application designed during an intensive 2-day summer camp hackathon to assist users with time management, sleep routine optimization, and daily schedule generation.
 
 ---
